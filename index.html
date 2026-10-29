@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AEM-25 單電池測試治具｜互動爆炸圖</title>
+<meta name="description" content="AEM-25：25 cm² AEM 水電解單電池測試治具的互動爆炸圖。點每個零件看材料、尺寸和用途。An interactive exploded view of a 25 cm² AEM water-electrolysis single-cell test fixture.">
+<link rel="canonical" href="https://kungmengchien.uk/aem-25/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AEM-25 單電池測試治具 · Single-Cell Test Fixture">
+<meta property="og:description" content="互動 3D 爆炸圖：13 個零件群組，點選即可看材料、尺寸與設計理由。Interactive 3D exploded view of 13 part groups.">
+<meta property="og:url" content="https://kungmengchien.uk/aem-25/">
+<meta property="og:image" content="https://kungmengchien.uk/aem-25/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0A0C10" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F1F2F6" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+<script>
+/* 在畫面出現前決定語言與主題，避免閃一下 */
+(function(){var d=document.documentElement,l=null,t=null;
+try{l=new URLSearchParams(location.search).get('lang')||localStorage.getItem('aem25-lang');t=localStorage.getItem('aem25-theme')}catch(e){}
+if(l!=='en'&&l!=='zh')l=/^zh/i.test(navigator.language||'')?'zh':'en';
+d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.classList.add('js')})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+
+<script type="importmap">
+{ "imports": { "three": "./assets/vendor/three/three.module.min.js",
+               "three/addons/": "./assets/vendor/three/addons/" } }
+</script>
+<link rel="modulepreload" href="assets/vendor/three/three.module.min.js">
+<script type="module" src="assets/js/app.js"></script>
+<script defer src="assets/js/site.js"></script>
+</head>
+<body>
+<a class="skip" href="#explore"><span class="zh">跳到爆炸圖</span><span class="en">Skip to exploded view</span></a>
+
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="AEM-25">AEM-25<span>REV C</span></a>
+    <nav aria-label="頁面" data-label-zh="頁面" data-label-en="Page">
+      <a href="#explore"><span class="zh">爆炸圖</span><span class="en">Explore</span></a>
+      <a href="#design"><span class="zh">設計</span><span class="en">Design</span></a>
+      <a href="#specs"><span class="zh">規格</span><span class="en">Specs</span></a>
+    </nav>
+    <div class="tools">
+      <button type="button" id="lang" class="tbtn" aria-label="Switch to English" data-label-zh="Switch to English" data-label-en="切換成中文"><span class="zh">EN</span><span class="en">中</span></button>
+      <button type="button" id="theme" class="tbtn" aria-label="切換深淺色" data-label-zh="切換深淺色" data-label-en="Toggle dark mode">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
+      </button>
+      <a class="tbtn" href="https://github.com/kungmengchien0814/aem-25" aria-label="GitHub">
+        <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.34.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero wrap">
+    <div class="hero-txt">
+      <p class="eyebrow">AEM-25 · Rev C · 2026</p>
+      <h1><span class="zh">一片 MEA 的<br><em>25&nbsp;cm²</em> 測試治具</span><span class="en">A <em>25&nbsp;cm²</em> test fixture for one&nbsp;AEM&nbsp;cell</span></h1>
+      <p class="lede zh">AEM-25 是陰離子交換膜（AEM）水電解用的單電池測試治具，在 1 M KOH、60 °C 下測一片 MEA。PTL 的壓縮量由墊片決定，電流從流道板銑出的極耳導出，一片 PEEK 把 KOH 和鋁端板隔開。</p>
+      <p class="lede en">AEM-25 is a single-cell test fixture for anion exchange membrane (AEM) water electrolysis. It tests one MEA in 1 M KOH at 60 °C. Gaskets set the PTL compression, current leaves through tabs machined into the flow plates, and a PEEK sheet keeps KOH away from the aluminium end plates.</p>
+      <ul class="chips">
+        <li class="status"><span class="zh">設計階段，尚未加工</span><span class="en">Design stage, not yet machined</span></li>
+        <li>1 M KOH · 60 °C</li>
+        <li><span class="zh">13 個零件群組</span><span class="en">13 part groups</span></li>
+      </ul>
+      <div class="cta">
+        <a class="btn primary" href="#explore"><span class="zh">拆開看看</span><span class="en">Take it apart</span> <span aria-hidden="true">↓</span></a>
+        <a class="btn" href="#specs"><span class="zh">看規格</span><span class="en">Specs</span></a>
+      </div>
+    </div>
+    <figure class="hero-img">
+      <img src="assets/img/hero.webp" width="1200" height="1000" alt="AEM-25 組立後的 3D 模型：兩片藍色鋁端板夾住鎳流道板，立在底座上" data-alt-zh="AEM-25 組立後的 3D 模型：兩片藍色鋁端板夾住鎳流道板，立在底座上" data-alt-en="3D model of the assembled AEM-25: two blue aluminium end plates clamp the nickel flow plates, standing on a base" fetchpriority="high">
+    </figure>
+  </section>
+
+  <section id="explore" class="explore" aria-labelledby="explore-h">
+    <div class="wrap sec-head">
+      <h2 id="explore-h"><span class="zh">零件爆炸圖</span><span class="en">Exploded view</span></h2>
+      <p class="zh">拖曳旋轉，滾輪或雙指縮放。點模型上的零件、編號或清單，旁邊會顯示材料、尺寸和用途。</p>
+      <p class="en">Drag to rotate; scroll or pinch to zoom. Click a part, a number tag or a list item to see its material, size and purpose.</p>
+    </div>
+    <div class="wrap bench">
+      <nav class="plist-wrap" aria-label="零件清單" data-label-zh="零件清單" data-label-en="Parts list">
+        <ol id="plist" class="plist"></ol>
+      </nav>
+      <div class="stagecol">
+        <div id="viewport" class="viewport" tabindex="0" aria-describedby="vp-help">
+          <canvas id="gl" role="img" aria-label="AEM-25 3D 爆炸圖"></canvas>
+          <div id="pins" class="pins"></div>
+          <div id="hovertip" class="hovertip" aria-hidden="true"></div>
+          <a id="selchip" class="selchip" href="#info" hidden></a>
+          <p id="hint" class="hint" aria-hidden="true"><span class="zh">拖曳旋轉 · 點零件看說明</span><span class="en">Drag to rotate · click a part</span></p>
+          <p class="loading"><span class="zh">載入 3D 模型…</span><span class="en">Loading 3D model…</span></p>
+          <div class="nogl">
+            <p class="zh">這個瀏覽器無法顯示 3D。下方的設計重點與規格仍可閱讀。</p>
+            <p class="en">This browser cannot show 3D. The design notes and specs below still work.</p>
+          </div>
+          <p id="vp-help" class="sr"><span class="zh">焦點在 3D 畫面時，方向鍵旋轉，加減號縮放，Esc 取消選取。</span><span class="en">With the 3D view focused, arrow keys rotate, plus and minus zoom, Esc clears the selection.</span></p>
+        </div>
+        <div class="toolbar">
+          <label for="explode"><span class="zh">拆開程度</span><span class="en">Explode</span></label>
+          <input id="explode" type="range" min="0" max="100" step="1" value="0">
+          <output id="explodeVal" for="explode">0 %</output>
+          <div class="tb-btns">
+            <button type="button" id="btnAssemble" class="btn sm"><span class="zh">組立</span><span class="en">Assemble</span></button>
+            <button type="button" id="btnExplode" class="btn sm"><span class="zh">全拆</span><span class="en">Explode</span></button>
+            <button type="button" id="btnReset" class="btn sm"><span class="zh">重設視角</span><span class="en">Reset view</span></button>
+          </div>
+        </div>
+      </div>
+      <aside id="info" class="info" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section id="design" class="sec wrap" aria-labelledby="design-h">
+    <div class="sec-head">
+      <h2 id="design-h"><span class="zh">三個設計決定</span><span class="en">Three design decisions</span></h2>
+      <p class="zh">蛇形流道、鎳材、四線量測都是常見做法。下面這三項才決定量到的電壓能不能拿來比較。</p>
+      <p class="en">A serpentine flow field, nickel parts and four-wire sensing are standard. These three choices decide whether the voltages you measure can be compared.</p>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <p class="pn">AEM-25-002</p>
+        <h3><span class="zh">整合式集電極耳</span><span class="en">Integrated current tabs</span></h3>
+        <p class="num">2.06<u>mΩ·cm²</u></p>
+        <p class="zh">流道板直接長出極耳，電流路徑上沒有螺栓接點。側面螺栓接點約 12–50 mΩ·cm²，還會隨熱循環漂移，數據上看起來就像 MEA 在衰減。膜本身約 83 mΩ·cm²。</p>
+        <p class="en">The tab is part of the flow plate, so no bolted joint sits in the current path. A side-bolted contact adds about 12–50 mΩ·cm² and drifts with thermal cycling, which looks just like MEA degradation in the data. The membrane itself is about 83 mΩ·cm².</p>
+        <a class="more" href="#p=fp_c" data-part="fp_c"><span class="zh">在爆炸圖看流道板</span><span class="en">See the flow plate</span> →</a>
+      </article>
+      <article class="card">
+        <p class="pn">AEM-25-003 / 004</p>
+        <h3><span class="zh">硬止擋墊片</span><span class="en">Hard-stop gaskets</span></h3>
+        <p class="num">7.4<u><span class="zh">% 標稱應變</span><span class="en">% nominal strain</span></u></p>
+        <p class="zh">PTFE 墊片幾乎不被壓縮，流道板之間的間隙就等於墊片厚度。Rev C 拿掉流道板上的凹槽，壓縮量只剩這一個變數。組裝前量 PTL，再從 9、10、11 mil 挑組合。</p>
+        <p class="en">PTFE gaskets barely compress, so the flow-plate gap equals the gasket thickness. Rev C removed the pocket in the flow plate, leaving that as the only variable. Measure the PTL before each build and pick from 9, 10 and 11 mil gaskets.</p>
+        <a class="more" href="#p=gk_c" data-part="gk_c"><span class="zh">在爆炸圖看墊片</span><span class="en">See the gasket</span> →</a>
+      </article>
+      <article class="card">
+        <p class="pn">AEM-25-005</p>
+        <h3><span class="zh">全面積 PEEK 屏障</span><span class="en">Full-size PEEK barrier</span></h3>
+        <p class="num">110<u><span class="zh">mm 見方</span><span class="en">mm square</span></u></p>
+        <p class="zh">絕緣片做到和端板一樣大，KOH 就碰不到鋁。它也是硬陽層之外的第二道電絕緣，端板到流道板的溫差從約 3 K 降到 1.65 K。</p>
+        <p class="en">The insulator matches the end plate, so KOH cannot reach the aluminium. It backs up the anodised layer as a second electrical insulator, and it cut the end-plate-to-flow-plate temperature drop from about 3 K to 1.65 K.</p>
+        <a class="more" href="#p=ins_c" data-part="ins_c"><span class="zh">在爆炸圖看屏障</span><span class="en">See the barrier</span> →</a>
+      </article>
+    </div>
+  </section>
+
+  <section id="numbers" class="sec wrap" aria-labelledby="numbers-h">
+    <div class="sec-head">
+      <h2 id="numbers-h"><span class="zh">關鍵數字</span><span class="en">By the numbers</span></h2>
+      <p class="zh">標「估」的數字建立在假設值上，首次組裝後會用量測校正。</p>
+      <p class="en">Values marked “est.” rest on an assumed value and will be corrected after the first build.</p>
+    </div>
+    <dl class="stats">
+      <div><dt><span class="zh">活性面積</span><span class="en">Active area</span></dt><dd>25.0<u>cm²</u></dd><p><span class="zh">50 × 50 mm 墊片窗口</span><span class="en">50 × 50 mm gasket window</span></p></div>
+      <div><dt><span class="zh">夾持高度</span><span class="en">Stack height</span></dt><dd>81.56<u>mm</u></dd><p><span class="zh">CAD 尺寸鏈 81.558 mm</span><span class="en">81.558 mm from the CAD dimension chain</span></p></div>
+      <div><dt><span class="zh">MEA 區厚度</span><span class="en">MEA zone</span></dt><dd>0.558<u>mm</u></dd><p><span class="zh">兩片 10 mil 墊片加 50 µm 膜</span><span class="en">Two 10 mil gaskets plus a 50 µm membrane</span></p></div>
+      <div><dt><span class="zh">PTL 面壓（估）</span><span class="en">PTL pressure (est.)</span></dt><dd><s>≈</s>0.15<u>MPa</u></dd><p><span class="zh">目標 0.18 MPa；等效模數 2.0 MPa 為假設值</span><span class="en">Target 0.18 MPa; the 2.0 MPa effective modulus is assumed</span></p></div>
+      <div><dt><span class="zh">螺栓扭力</span><span class="en">Bolt torque</span></dt><dd>1.0<u>N·m</u></dd><p><span class="zh">範圍 0.8–1.2，上限 1.3</span><span class="en">Range 0.8–1.2, limit 1.3</span></p></div>
+      <div><dt><span class="zh">設計檢查</span><span class="en">Design checks</span></dt><dd>290<u><span class="zh">項</span><span class="en">items</span></u></dd><p><span class="zh">9 個 STEP 零件、80 個實體，干涉 0</span><span class="en">9 STEP parts, 80 solids, zero interference</span></p></div>
+    </dl>
+  </section>
+
+  <section id="specs" class="sec wrap" aria-labelledby="specs-h">
+    <div class="sec-head">
+      <h2 id="specs-h"><span class="zh">規格</span><span class="en">Specifications</span></h2>
+      <p class="zh">Rev C，2026-10-14。標 † 的項目沿用 Rev B 的計算值。</p>
+      <p class="en">Rev C, 2026-10-14. Items marked † carry over Rev B calculations.</p>
+    </div>
+    <dl class="spec">
+      <div><dt><span class="zh">活性面積</span><span class="en">Active area</span></dt><dd>50 × 50 mm = 25.0 cm²</dd></div>
+      <div><dt>MEA</dt><dd><span class="zh">66 × 66 mm，膜厚 50 µm</span><span class="en">66 × 66 mm, 50 µm membrane</span></dd></div>
+      <div><dt><span class="zh">墊片</span><span class="en">Gaskets</span></dt><dd>PTFE, 10 + 10 mil (0.254 mm × 2)<small><span class="zh">另備 9／11 mil</span><span class="en">9 and 11 mil spares</span></small></dd></div>
+      <div><dt>PTL</dt><dd><span class="zh">陰陽極皆為鎳氈</span><span class="en">Nickel felt on both sides</span></dd></div>
+      <div><dt><span class="zh">流道板</span><span class="en">Flow plates</span></dt><dd><span class="zh">實心鎳，80 × 80 × 15 mm</span><span class="en">Solid nickel, 80 × 80 × 15 mm</span><small><span class="zh">4 通道蛇形 × 6 道次，24 條 1.00 × 1.00 mm，總長 328 mm</span><span class="en">4-channel serpentine × 6 passes, 24 × 1.00 × 1.00 mm, 328 mm total</span></small></dd></div>
+      <div><dt><span class="zh">端板</span><span class="en">End plates</span></dt><dd><span class="zh">6061-T6 鋁硬陽，110 × 110 × 25 mm，R8</span><span class="en">6061-T6 aluminium, hard-anodised, 110 × 110 × 25 mm, R8</span></dd></div>
+      <div><dt><span class="zh">絕緣／化學屏障</span><span class="en">Insulation / chemical barrier</span></dt><dd>PEEK, 110 × 110 × 0.5 mm</dd></div>
+      <div><dt><span class="zh">夾持</span><span class="en">Clamping</span></dt><dd><span class="zh">8 × M6 × 100 A4-70，絕緣套管，每支 3 片碟簧</span><span class="en">8 × M6 × 100 A4-70, insulating sleeves, 3 disc springs per bolt</span><small><span class="zh">扭力 1.0 N·m（0.8–1.2，上限 1.3）</span><span class="en">Torque 1.0 N·m (0.8–1.2, limit 1.3)</span></small></dd></div>
+      <div><dt><span class="zh">電解液</span><span class="en">Electrolyte</span></dt><dd>1 M KOH (≈ 5.4 wt.%), 60 °C</dd></div>
+      <div><dt><span class="zh">加熱</span><span class="en">Heating</span></dt><dd><span class="zh">4 × 100 W 筒式加熱器 †</span><span class="en">4 × 100 W cartridge heaters †</span></dd></div>
+      <div><dt><span class="zh">額定電流</span><span class="en">Rated current</span></dt><dd>50 A @ 2 A/cm² †</dd></div>
+      <div><dt><span class="zh">液相壓損</span><span class="en">Liquid pressure drop</span></dt><dd>1.52 kPa @ 60 mL/min †</dd></div>
+      <div><dt><span class="zh">壓力</span><span class="en">Pressure</span></dt><dd>≤ 1 bar(g) †<small><span class="zh">只靠墊片密封，不可加壓運轉</span><span class="en">Gasket seal only; not for pressurised operation</span></small></dd></div>
+    </dl>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="zh"><b>設計階段。</b>AEM-25 尚未加工，頁面上的數字來自 2026-10-14 的 Rev C 設計文件。3D 模型由程式依設計尺寸生成；爆炸圖中 MEA 各層有加厚，才看得見。</p>
+    <p class="en"><b>Design stage.</b> AEM-25 has not been machined yet. Figures on this page come from the Rev C design documents dated 2026-10-14. The 3D model is generated in code from the design dimensions; the exploded view draws the MEA layers thicker so you can see them.</p>
+    <p class="zh">端板上的 NCUT 是示意字樣，不是國立勤益科技大學的官方標誌。</p>
+    <p class="en">The NCUT lettering on the end plate is a placeholder, not the official mark of National Chin-Yi University of Technology.</p>
+    <p class="meta"><span class="zh">設計與網站：龔孟謙</span><span class="en">Design &amp; site: Meng-Chien Kung</span> · <a href="https://kungmengchien.uk/">kungmengchien.uk</a> · <a href="https://github.com/kungmengchien0814/aem-25">GitHub</a> · 3D: <a href="https://threejs.org/">three.js</a> r160 (MIT) · <span class="zh">更新於</span><span class="en">Updated</span> 2026-10-29</p>
+  </div>
+</footer>
+</body>
+</html>
