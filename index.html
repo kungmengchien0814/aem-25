@@ -23,7 +23,7 @@
 /* 在畫面出現前決定語言與主題，避免閃一下 */
 (function(){var d=document.documentElement,l=null,t=null;
 try{l=new URLSearchParams(location.search).get('lang')||localStorage.getItem('aem25-lang');t=localStorage.getItem('aem25-theme')}catch(e){}
-if(l!=='en'&&l!=='zh')l=/^zh/i.test(navigator.language||'')?'zh':'en';
+if(l!=='en'&&l!=='zh')l='zh'; /* 預設中文；英文要用 ?lang=en 或按 EN 切換 */
 d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.classList.add('js')})();
 </script>
 

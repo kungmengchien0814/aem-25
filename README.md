@@ -14,8 +14,8 @@ AEM-25 is a 25 cm² single-cell test fixture for anion exchange membrane (AEM) w
 
 - 互動爆炸圖：點選零件、編號標籤或清單，拆開程度可調，可用鍵盤操作
   Interactive exploded view with click-to-inspect, number tags, a parts list, an explode slider and keyboard controls
-- 中文／English 切換，深色／淺色主題
-  Chinese / English toggle and light / dark themes
+- 中文／English 切換，預設中文（`?lang=en` 直接開英文）；深色／淺色主題
+  Chinese / English toggle, Chinese by default (`?lang=en` opens in English); light / dark themes
 - 連結可直接指向零件，例如 `#p=fp_c`
   Deep links to a part, e.g. `#p=fp_c`
 - 純靜態網站，不需要建置；three.js 放在 repo 內，不依賴外部 CDN
