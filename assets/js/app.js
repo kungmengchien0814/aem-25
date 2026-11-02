@@ -3,7 +3,7 @@
  * 依賴：index.html 的 importmap（three、three/addons）、content.js（零件文字）。 */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { PARTS, UI } from './content.js';
+import { PARTS, UI } from './content.js?v=20261102a';
 
 const $ = id => document.getElementById(id);
 const doc = document.documentElement;

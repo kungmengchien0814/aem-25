@@ -26,7 +26,7 @@ export const PARTS = [
       zh: '夾在端板和流道板之間，做兩件事。第一是電絕緣：兩片端板經螺栓同電位，流道板各自帶電。第二是化學屏障：它做到和端板一樣大，KOH 碰不到鋁。',
       en: 'Sits between the end plate and the flow plate and does two jobs. It insulates: both end plates share potential through the bolts while each flow plate carries its own. It also blocks chemistry: cut to the full end-plate size, it keeps KOH off the aluminium.'
     },
-    note: { zh: '全面積後，端板到流道板的溫差從約 3 K 降到 1.65 K。', en: 'Going full-size cut the end-plate-to-flow-plate temperature drop from about 3 K to 1.65 K.' },
+    note: { zh: '全面積後，10 W 時端板到流道板的溫差算起來從約 3 K 降到 1.65 K（Rev B 計算值）。', en: 'Going full-size, the calculated end-plate-to-flow-plate temperature drop at 10 W falls from about 3 K to 1.65 K (Rev B calculation).' },
   },
   {
     id: 'fp_c', side: 'c',
@@ -67,7 +67,7 @@ export const PARTS = [
       zh: '多孔傳輸層（PTL）讓水進到電極、讓氣體離開，同時把電流傳到流道板。它比墊片留下的間隙厚，夾緊後被壓縮。10 + 10 mil 墊片時標稱應變 7.4 %，面壓約 0.15 MPa。',
       en: 'The porous transport layer lets water reach the electrode, lets gas out, and carries current to the flow plate. It is thicker than the gap the gaskets leave, so clamping compresses it: 7.4 % nominal strain and about 0.15 MPa with 10 + 10 mil gaskets.'
     },
-    note: { zh: '0.15 MPa 是估計值，用的是假設的等效模數 2.0 MPa，首次組裝會用感壓紙驗證。', en: '0.15 MPa is an estimate based on an assumed 2.0 MPa effective modulus. The first build will check it with pressure-sensitive film.' },
+    note: { zh: '0.15 MPa 是估計值，用的是假設的等效模數 2.0 MPa，首次組裝會用感壓紙驗證。碳紙列為這一側的選項，要先在約 0.2 MPa 下量過厚度才會用。', en: '0.15 MPa is an estimate based on an assumed 2.0 MPa effective modulus. The first build will check it with pressure-sensitive film. Carbon paper is an option for this side only after its thickness is measured at about 0.2 MPa.' },
   },
   {
     id: 'mem', side: 'm',
@@ -89,7 +89,7 @@ export const PARTS = [
       zh: '和陰極用同一種鎳氈。鎳在鹼液裡穩定，可以直接放在產氧的陽極。兩側 PTL 一起算壓縮量，因為膜夾在中間會跟著移動。',
       en: 'The same nickel felt as the cathode. Nickel is stable in alkaline electrolyte, so it can sit on the oxygen-evolving anode. Compression is calculated for both PTLs together, because the membrane between them floats.'
     },
-    note: { zh: '碳紙列為陰極選項，要先在約 0.2 MPa 下量過厚度才會用。', en: 'Carbon paper is an option for the cathode only after its thickness is measured at about 0.2 MPa.' },
+    note: null,
   },
   {
     id: 'gk_a', side: 'a',
@@ -177,7 +177,7 @@ export const UI = {
     pin: (i, name) => '第 ' + i + ' 號：' + name,
     canvas: (sel, e) => 'AEM-25 3D 爆炸圖，拆開 ' + Math.round(e * 100) + ' %' + (sel ? '，已選：' + sel : '') + '。可用方向鍵旋轉，加減號縮放。',
     explodeVal: e => Math.round(e * 100) + ' %',
-    introH: '點一個零件', introP: '在模型上點零件，或從清單挑。拖曳可以旋轉，滾輪或雙指可以縮放。',
+    introH: '點一個零件', introP: '在模型上點零件，或從清單挑。拖曳可以旋轉，<span class="on-mouse">滾輪或雙指</span><span class="on-touch">雙指</span>可以縮放。',
     layers: '十一層，由陰極到陽極：端板、PEEK 屏障、流道板、墊片、PTL、膜，再對稱回到陽極端板。另外兩組是夾持組和底座。',
     clear: '取消選取',
   },
@@ -187,7 +187,7 @@ export const UI = {
     pin: (i, name) => 'Part ' + i + ': ' + name,
     canvas: (sel, e) => 'AEM-25 3D exploded view, ' + Math.round(e * 100) + ' % apart' + (sel ? ', selected: ' + sel : '') + '. Arrow keys rotate, plus and minus zoom.',
     explodeVal: e => Math.round(e * 100) + ' %',
-    introH: 'Pick a part', introP: 'Click a part on the model or choose one from the list. Drag to rotate; scroll or pinch to zoom.',
+    introH: 'Pick a part', introP: '<span class="on-mouse">Click</span><span class="on-touch">Tap</span> a part on the model or choose one from the list. Drag to rotate; <span class="on-mouse">scroll or pinch</span><span class="on-touch">pinch</span> to zoom.',
     layers: 'Eleven layers from cathode to anode: end plate, PEEK barrier, flow plate, gasket, PTL and membrane, then the mirror image back out to the anode end plate. The clamping set and stand make thirteen groups.',
     clear: 'Clear selection',
   },

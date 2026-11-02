@@ -30,15 +30,15 @@ d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.cl
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/site.css?v=20261102a">
 
 <script type="importmap">
 { "imports": { "three": "./assets/vendor/three/three.module.min.js",
                "three/addons/": "./assets/vendor/three/addons/" } }
 </script>
 <link rel="modulepreload" href="assets/vendor/three/three.module.min.js">
-<script type="module" src="assets/js/app.js"></script>
-<script defer src="assets/js/site.js"></script>
+<script type="module" src="assets/js/app.js?v=20261102a"></script>
+<script defer src="assets/js/site.js?v=20261102a"></script>
 </head>
 <body>
 <a class="skip" href="#explore"><span class="zh">跳到爆炸圖</span><span class="en">Skip to exploded view</span></a>
@@ -88,8 +88,8 @@ d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.cl
   <section id="explore" class="explore" aria-labelledby="explore-h">
     <div class="wrap sec-head">
       <h2 id="explore-h"><span class="zh">零件爆炸圖</span><span class="en">Exploded view</span></h2>
-      <p class="zh">拖曳旋轉，滾輪或雙指縮放。點模型上的零件、編號或清單，旁邊會顯示材料、尺寸和用途。</p>
-      <p class="en">Drag to rotate; scroll or pinch to zoom. Click a part, a number tag or a list item to see its material, size and purpose.</p>
+      <p class="zh">拖曳旋轉，<span class="on-mouse">滾輪或雙指</span><span class="on-touch">雙指</span>縮放。點模型上的零件、編號或清單，就會顯示材料、尺寸和用途。</p>
+      <p class="en">Drag to rotate; <span class="on-mouse">scroll or pinch</span><span class="on-touch">pinch</span> to zoom. <span class="on-mouse">Click</span><span class="on-touch">Tap</span> a part, a number tag or a list item to see its material, size and purpose.</p>
     </div>
     <div class="wrap bench">
       <nav class="plist-wrap" aria-label="零件清單" data-label-zh="零件清單" data-label-en="Parts list">
@@ -101,7 +101,7 @@ d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.cl
           <div id="pins" class="pins"></div>
           <div id="hovertip" class="hovertip" aria-hidden="true"></div>
           <a id="selchip" class="selchip" href="#info" hidden></a>
-          <p id="hint" class="hint" aria-hidden="true"><span class="zh">拖曳旋轉 · 點零件看說明</span><span class="en">Drag to rotate · click a part</span></p>
+          <p id="hint" class="hint" aria-hidden="true"><span class="zh">拖曳旋轉 · 點零件看說明</span><span class="en">Drag to rotate · <span class="on-mouse">click</span><span class="on-touch">tap</span> a part</span></p>
           <p class="loading"><span class="zh">載入 3D 模型…</span><span class="en">Loading 3D model…</span></p>
           <div class="nogl">
             <p class="zh">這個瀏覽器無法顯示 3D。下方的設計重點與規格仍可閱讀。</p>
@@ -127,16 +127,16 @@ d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.cl
   <section id="design" class="sec wrap" aria-labelledby="design-h">
     <div class="sec-head">
       <h2 id="design-h"><span class="zh">三個設計決定</span><span class="en">Three design decisions</span></h2>
-      <p class="zh">蛇形流道、鎳材、四線量測都是常見做法。下面這三項才決定量到的電壓能不能拿來比較。</p>
-      <p class="en">A serpentine flow field, nickel parts and four-wire sensing are standard. These three choices decide whether the voltages you measure can be compared.</p>
+      <p class="zh">蛇形流道、鎳材、四線量測都是常見做法。下面這三項才決定量到的電壓能不能拿來比較。標 † 的數字沿用 Rev B 的計算值。</p>
+      <p class="en">A serpentine flow field, nickel parts and four-wire sensing are standard. These three choices decide whether the voltages you measure can be compared. Figures marked † carry over Rev B calculations.</p>
     </div>
     <div class="cards">
       <article class="card">
         <p class="pn">AEM-25-002</p>
         <h3><span class="zh">整合式集電極耳</span><span class="en">Integrated current tabs</span></h3>
-        <p class="num">2.06<u>mΩ·cm²</u></p>
-        <p class="zh">流道板直接長出極耳，電流路徑上沒有螺栓接點。側面螺栓接點約 12–50 mΩ·cm²，還會隨熱循環漂移，數據上看起來就像 MEA 在衰減。膜本身約 83 mΩ·cm²。</p>
-        <p class="en">The tab is part of the flow plate, so no bolted joint sits in the current path. A side-bolted contact adds about 12–50 mΩ·cm² and drifts with thermal cycling, which looks just like MEA degradation in the data. The membrane itself is about 83 mΩ·cm².</p>
+        <p class="num">2.06<u>mΩ·cm² †</u></p>
+        <p class="zh">流道板直接長出極耳，電流路徑上沒有螺栓接點。側面螺栓接點約 12–50 mΩ·cm²&nbsp;†，還會隨熱循環漂移，數據上看起來就像 MEA 在衰減。膜本身約 83 mΩ·cm²&nbsp;†。</p>
+        <p class="en">The tab is part of the flow plate, so no bolted joint sits in the current path. A side-bolted contact adds about 12–50 mΩ·cm²&nbsp;† and drifts with thermal cycling, which looks just like MEA degradation in the data. The membrane itself is about 83 mΩ·cm²&nbsp;†.</p>
         <a class="more" href="#p=fp_c" data-part="fp_c"><span class="zh">在爆炸圖看流道板</span><span class="en">See the flow plate</span> →</a>
       </article>
       <article class="card">
@@ -151,8 +151,8 @@ d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.cl
         <p class="pn">AEM-25-005</p>
         <h3><span class="zh">全面積 PEEK 屏障</span><span class="en">Full-size PEEK barrier</span></h3>
         <p class="num">110<u><span class="zh">mm 見方</span><span class="en">mm square</span></u></p>
-        <p class="zh">絕緣片做到和端板一樣大，KOH 就碰不到鋁。它也是硬陽層之外的第二道電絕緣，端板到流道板的溫差從約 3 K 降到 1.65 K。</p>
-        <p class="en">The insulator matches the end plate, so KOH cannot reach the aluminium. It backs up the anodised layer as a second electrical insulator, and it cut the end-plate-to-flow-plate temperature drop from about 3 K to 1.65 K.</p>
+        <p class="zh">絕緣片做到和端板一樣大，KOH 就碰不到鋁。它也是硬陽層之外的第二道電絕緣。10 W 時，端板到流道板的溫差算起來從約 3 K 降到 1.65 K&nbsp;†。</p>
+        <p class="en">The insulator matches the end plate, so KOH cannot reach the aluminium. It backs up the anodised layer as a second electrical insulator. At 10 W, the calculated end-plate-to-flow-plate temperature drop falls from about 3 K to 1.65 K&nbsp;†.</p>
         <a class="more" href="#p=ins_c" data-part="ins_c"><span class="zh">在爆炸圖看屏障</span><span class="en">See the barrier</span> →</a>
       </article>
     </div>
@@ -204,7 +204,7 @@ d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.cl
     <p class="en"><b>Design stage.</b> AEM-25 has not been machined yet. Figures on this page come from the Rev C design documents dated 2026-10-14. The 3D model is generated in code from the design dimensions; the exploded view draws the MEA layers thicker so you can see them.</p>
     <p class="zh">端板上的 NCUT 是示意字樣，不是國立勤益科技大學的官方標誌。</p>
     <p class="en">The NCUT lettering on the end plate is a placeholder, not the official mark of National Chin-Yi University of Technology.</p>
-    <p class="meta"><span class="zh">設計與網站：龔孟謙</span><span class="en">Design &amp; site: Meng-Chien Kung</span> · <a href="https://kungmengchien.uk/">kungmengchien.uk</a> · <a href="https://github.com/kungmengchien0814/aem-25">GitHub</a> · 3D: <a href="https://threejs.org/">three.js</a> r160 (MIT) · <span class="zh">更新於</span><span class="en">Updated</span> 2026-10-29</p>
+    <p class="meta"><span class="zh">設計與網站：龔孟謙</span><span class="en">Design &amp; site: Meng-Chien Kung</span> · <a class="zh" href="https://kungmengchien.uk/">kungmengchien.uk</a><a class="en" href="https://kungmengchien.uk/en/">kungmengchien.uk</a> · <a href="https://github.com/kungmengchien0814/aem-25">GitHub</a> · 3D: <a href="https://threejs.org/">three.js</a> r160 (MIT) · <span class="zh">更新於</span><span class="en">Updated</span> 2026-11-02</p>
   </div>
 </footer>
 </body>

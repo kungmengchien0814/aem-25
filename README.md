@@ -36,6 +36,9 @@ AEM-25 is a 25 cm² single-cell test fixture for anion exchange membrane (AEM) w
 改數字時，`content.js` 和 `index.html` 的「關鍵數字」「規格」兩段要一起改。
 When a figure changes, update `content.js` and the numbers and specs sections in `index.html` together.
 
+Cloudflare 會快取 CSS 和 JS 4 小時，所以改了這些檔案要一起換 `?v=`：`index.html` 三處，`assets/js/app.js` 匯入 `content.js` 一處。
+Cloudflare caches CSS and JS for 4 hours, so bump `?v=` whenever they change: three places in `index.html` and the `content.js` import in `assets/js/app.js`.
+
 ## 本機預覽 / Local preview
 
 ```bash
