@@ -3,9 +3,11 @@
  * 依賴：index.html 的 importmap（three、three/addons）、content.js（零件文字）。 */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { PARTS, UI } from './content.js?v=20261102a';
+import { PARTS, UI } from './content.js?v=20261105a';
 
 const $ = id => document.getElementById(id);
+const ZK = /Mac|iPhone|iPad/.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '') ? '⌘' : 'Ctrl';
+const keyNames = root => root.querySelectorAll('.zk').forEach(k => { k.textContent = ZK; });
 const doc = document.documentElement;
 const lang = () => (doc.lang === 'en' ? 'en' : 'zh');
 const tr = o => (o == null ? '' : typeof o === 'string' ? o : (o[lang()] ?? o.zh));
@@ -305,6 +307,17 @@ function init(){
   camera.position.copy(homePos());
   controls.addEventListener('start', () => { userMoved = true; camTw = null; hideHint(); });
 
+  /* 滾輪留給頁面捲動：按住 Ctrl（Mac 為 ⌘）才縮放。觸控板雙指會帶 ctrlKey，照常縮放 */
+  const wheelHint = $('wheelhint');
+  let wheelT = 0;
+  vp.addEventListener('wheel', e => {
+    if (e.ctrlKey || e.metaKey) return;
+    e.stopPropagation();
+    if (!wheelHint) return;
+    wheelHint.classList.add('on'); clearTimeout(wheelT);
+    wheelT = setTimeout(() => wheelHint.classList.remove('on'), 1400);
+  }, { capture: true, passive: true });
+
   const sph = new THREE.Spherical(), off3 = new THREE.Vector3();
   function orbitBy(dTheta, dPhi, kR){
     off3.copy(camera.position).sub(controls.target); sph.setFromVector3(off3);
@@ -378,6 +391,7 @@ function init(){
     const u = ui();
     if (!sel){
       info.innerHTML = '<p class="kick">AEM-25 · 13</p><h3>' + u.introH + '</h3><p>' + u.introP + '</p><p class="muted">' + u.layers + '</p>';
+      keyNames(info);
       return;
     }
     const p = P[sel], d = p.d, i = p.idx;
@@ -545,6 +559,7 @@ function init(){
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { paint(); texts(); });
   addEventListener('langchange', texts);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { drawDecals(); needs = true; });
+  keyNames(document);
   paint(); texts(); resize(); setE(0);
   const m = /^#p=([a-z_]+)$/.exec(location.hash);
   if (m && P[m[1]]){ introDone = true; setE(INNER.has(m[1]) ? .72 : 0); select(m[1]); requestAnimationFrame(() => document.getElementById('explore').scrollIntoView()); }

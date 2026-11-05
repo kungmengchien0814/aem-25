@@ -30,15 +30,15 @@ d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.cl
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="assets/css/site.css?v=20261102a">
+<link rel="stylesheet" href="assets/css/site.css?v=20261105a">
 
 <script type="importmap">
 { "imports": { "three": "./assets/vendor/three/three.module.min.js",
                "three/addons/": "./assets/vendor/three/addons/" } }
 </script>
 <link rel="modulepreload" href="assets/vendor/three/three.module.min.js">
-<script type="module" src="assets/js/app.js?v=20261102a"></script>
-<script defer src="assets/js/site.js?v=20261102a"></script>
+<script type="module" src="assets/js/app.js?v=20261105a"></script>
+<script defer src="assets/js/site.js?v=20261105a"></script>
 </head>
 <body>
 <a class="skip" href="#explore"><span class="zh">跳到爆炸圖</span><span class="en">Skip to exploded view</span></a>
@@ -88,8 +88,8 @@ d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.cl
   <section id="explore" class="explore" aria-labelledby="explore-h">
     <div class="wrap sec-head">
       <h2 id="explore-h"><span class="zh">零件爆炸圖</span><span class="en">Exploded view</span></h2>
-      <p class="zh">拖曳旋轉，<span class="on-mouse">滾輪或雙指</span><span class="on-touch">雙指</span>縮放。點模型上的零件、編號或清單，就會顯示材料、尺寸和用途。</p>
-      <p class="en">Drag to rotate; <span class="on-mouse">scroll or pinch</span><span class="on-touch">pinch</span> to zoom. <span class="on-mouse">Click</span><span class="on-touch">Tap</span> a part, a number tag or a list item to see its material, size and purpose.</p>
+      <p class="zh">拖曳旋轉，<span class="on-mouse">按住 <kbd class="zk">Ctrl</kbd> 滾動或用觸控板雙指</span><span class="on-touch">雙指</span>縮放。點模型上的零件、編號或清單，就會顯示材料、尺寸和用途。</p>
+      <p class="en">Drag to rotate; <span class="on-mouse">hold <kbd class="zk">Ctrl</kbd> and scroll, or pinch on a trackpad,</span><span class="on-touch">pinch</span> to zoom. <span class="on-mouse">Click</span><span class="on-touch">Tap</span> a part, a number tag or a list item to see its material, size and purpose.</p>
     </div>
     <div class="wrap bench">
       <nav class="plist-wrap" aria-label="零件清單" data-label-zh="零件清單" data-label-en="Parts list">
@@ -102,6 +102,7 @@ d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.cl
           <div id="hovertip" class="hovertip" aria-hidden="true"></div>
           <a id="selchip" class="selchip" href="#info" hidden></a>
           <p id="hint" class="hint" aria-hidden="true"><span class="zh">拖曳旋轉 · 點零件看說明</span><span class="en">Drag to rotate · <span class="on-mouse">click</span><span class="on-touch">tap</span> a part</span></p>
+          <p id="wheelhint" class="hint wheelhint" aria-hidden="true"><span class="zh">按住 <kbd class="zk">Ctrl</kbd> 再滾動才會縮放</span><span class="en">Hold <kbd class="zk">Ctrl</kbd> and scroll to zoom</span></p>
           <p class="loading"><span class="zh">載入 3D 模型…</span><span class="en">Loading 3D model…</span></p>
           <div class="nogl">
             <p class="zh">這個瀏覽器無法顯示 3D。下方的設計重點與規格仍可閱讀。</p>
@@ -135,16 +136,16 @@ d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.cl
         <p class="pn">AEM-25-002</p>
         <h3><span class="zh">整合式集電極耳</span><span class="en">Integrated current tabs</span></h3>
         <p class="num">2.06<u>mΩ·cm² †</u></p>
-        <p class="zh">流道板直接長出極耳，電流路徑上沒有螺栓接點。側面螺栓接點約 12–50 mΩ·cm²&nbsp;†，還會隨熱循環漂移，數據上看起來就像 MEA 在衰減。膜本身約 83 mΩ·cm²&nbsp;†。</p>
-        <p class="en">The tab is part of the flow plate, so no bolted joint sits in the current path. A side-bolted contact adds about 12–50 mΩ·cm²&nbsp;† and drifts with thermal cycling, which looks just like MEA degradation in the data. The membrane itself is about 83 mΩ·cm²&nbsp;†.</p>
+        <p class="zh">流道板直接長出極耳，電流路徑上沒有螺栓接點。側面螺栓接點約 12–50 mΩ·cm²&nbsp;†，還會隨熱循環漂移，數據上看起來就像 MEA 在衰減。膜本身約 83 mΩ·cm²&nbsp;†。2.06 是 Rev B 用 316L 算的，Rev C 改成實心鎳，這個電阻只會更低。</p>
+        <p class="en">The tab is part of the flow plate, so no bolted joint sits in the current path. A side-bolted contact adds about 12–50 mΩ·cm²&nbsp;† and drifts with thermal cycling, which looks just like MEA degradation in the data. The membrane itself is about 83 mΩ·cm²&nbsp;†. The 2.06 figure was calculated for the 316L plate of Rev B; Rev C's solid nickel can only lower it.</p>
         <a class="more" href="#p=fp_c" data-part="fp_c"><span class="zh">在爆炸圖看流道板</span><span class="en">See the flow plate</span> →</a>
       </article>
       <article class="card">
         <p class="pn">AEM-25-003 / 004</p>
         <h3><span class="zh">硬止擋墊片</span><span class="en">Hard-stop gaskets</span></h3>
         <p class="num">7.4<u><span class="zh">% 標稱應變</span><span class="en">% nominal strain</span></u></p>
-        <p class="zh">PTFE 墊片幾乎不被壓縮，流道板之間的間隙就等於墊片厚度。Rev C 拿掉流道板上的凹槽，壓縮量只剩這一個變數。組裝前量 PTL，再從 9、10、11 mil 挑組合。</p>
-        <p class="en">PTFE gaskets barely compress, so the flow-plate gap equals the gasket thickness. Rev C removed the pocket in the flow plate, leaving that as the only variable. Measure the PTL before each build and pick from 9, 10 and 11 mil gaskets.</p>
+        <p class="zh">PTFE 墊片幾乎不被壓縮，流道板之間的間隙就等於墊片厚度。Rev C 拿掉流道板上的凹槽，壓縮量只剩這一個變數。組裝前量 PTL，再從 9、10、11 mil 挑組合。PTFE 長時間受壓會慢慢潛變（Rev B 評估：60–80 °C、4 MPa），所以壓縮量可能隨運轉時間略增。</p>
+        <p class="en">PTFE gaskets barely compress, so the flow-plate gap equals the gasket thickness. Rev C removed the pocket in the flow plate, leaving that as the only variable. Measure the PTL before each build and pick from 9, 10 and 11 mil gaskets. PTFE does creep under sustained load (the Rev B review flags 60–80 °C at 4 MPa), so compression can rise slowly over long runs.</p>
         <a class="more" href="#p=gk_c" data-part="gk_c"><span class="zh">在爆炸圖看墊片</span><span class="en">See the gasket</span> →</a>
       </article>
       <article class="card">
@@ -204,7 +205,7 @@ d.lang=l==='en'?'en':'zh-Hant';if(t==='dark'||t==='light')d.dataset.theme=t;d.cl
     <p class="en"><b>Design stage.</b> AEM-25 has not been machined yet. Figures on this page come from the Rev C design documents dated 2026-10-14. The 3D model is generated in code from the design dimensions; the exploded view draws the MEA layers thicker so you can see them.</p>
     <p class="zh">端板上的 NCUT 是示意字樣，不是國立勤益科技大學的官方標誌。</p>
     <p class="en">The NCUT lettering on the end plate is a placeholder, not the official mark of National Chin-Yi University of Technology.</p>
-    <p class="meta"><span class="zh">設計與網站：龔孟謙</span><span class="en">Design &amp; site: Meng-Chien Kung</span> · <a class="zh" href="https://kungmengchien.uk/">kungmengchien.uk</a><a class="en" href="https://kungmengchien.uk/en/">kungmengchien.uk</a> · <a href="https://github.com/kungmengchien0814/aem-25">GitHub</a> · 3D: <a href="https://threejs.org/">three.js</a> r160 (MIT) · <span class="zh">更新於</span><span class="en">Updated</span> 2026-11-02</p>
+    <p class="meta"><span class="zh">設計與網站：龔孟謙</span><span class="en">Design &amp; site: Meng-Chien Kung</span> · <a class="zh" href="https://kungmengchien.uk/">kungmengchien.uk</a><a class="en" href="https://kungmengchien.uk/en/">kungmengchien.uk</a> · <a href="https://github.com/kungmengchien0814/aem-25">GitHub</a> · 3D: <a href="https://threejs.org/">three.js</a> r160 (MIT) · <span class="zh">更新於</span><span class="en">Updated</span> 2026-11-05</p>
   </div>
 </footer>
 </body>
