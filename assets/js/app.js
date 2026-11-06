@@ -3,7 +3,7 @@
  * 依賴：index.html 的 importmap（three、three/addons）、content.js（零件文字）。 */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { PARTS, UI } from './content.js?v=20261105a';
+import { PARTS, UI } from './content.js?v=20261106a';
 
 const $ = id => document.getElementById(id);
 const ZK = /Mac|iPhone|iPad/.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '') ? '⌘' : 'Ctrl';
@@ -35,14 +35,16 @@ function init(){
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-  /* ═══ DATA: 幾何（AEM-25 Rev C，mm） ═══ */
+  /* ═══ DATA: 幾何（AEM-25 Rev D 草案，mm） ═══
+   * Rev D 相對 Rev C：極耳移到上緣一側（像「凹」去掉一邊），兩片一左一右；
+   * 進出口改成對角，流道改 5 道次；螺栓改成四角加四邊中點，讓出上緣給極耳。 */
   const MIL = 0.0254;
   const GEO = {
     ep: 110, ep_t: 25, ep_r: 8, fp: 80, fp_t: 15, ins_t: 0.5,
     gasket: 10 * MIL, mem: 0.050, mea: 66, active: 50,
-    tab_w: 36, tab_top: 74, tab_t: 6, lug: [-9, 64], sense: [9, 64],
+    tab_x: -22, tab_w: 28, tab_top: 74, tab_t: 6, lug: [-29, 64], sense: [-15, 64],
     ports_y: [-20, 20], base: [150, 100, 15],
-    bolts: [[-25,-45],[25,-45],[-45,-25],[45,-25],[-45,25],[45,25],[-25,45],[25,45]],
+    bolts: [[-45,-45],[0,-45],[45,-45],[-45,0],[45,0],[-45,45],[0,45],[45,45]],
   };
   const MEAZ = 2 * GEO.gasket + GEO.mem;                         // 0.558
   const Z = {
@@ -143,11 +145,12 @@ function init(){
   /* ── 貼圖 ── */
   const faceCv = document.createElement('canvas'); faceCv.width = faceCv.height = 1024;
   const chCv = document.createElement('canvas'); chCv.width = chCv.height = 1024;
-  const faceTex = new THREE.CanvasTexture(faceCv), chTex = new THREE.CanvasTexture(chCv);
-  [faceTex, chTex].forEach(t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; });
-  /* 流道：4 通道並聯 × 6 道次，24 條 1 × 1 mm，節距 2 mm */
+  const chCvM = document.createElement('canvas'); chCvM.width = chCvM.height = 1024;
+  const faceTex = new THREE.CanvasTexture(faceCv), chTex = new THREE.CanvasTexture(chCv), chTexM = new THREE.CanvasTexture(chCvM);
+  [faceTex, chTex, chTexM].forEach(t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; });
+  /* 流道：5 通道並聯 × 5 道次，25 條 1 × 1 mm，節距 2 mm。道次是奇數，出口才會在進口的對角 */
   const CH = (() => {
-    const r = [], n = 24, Pt = 2, y0 = -23, xs = 23, hs = 25, np = 4, npass = 6;
+    const r = [], np = 5, npass = 5, n = np * npass, Pt = 2, y0 = -24, xs = 23, hs = 25;
     for (let k = 0; k < n; k++) r.push([-xs, y0 + Pt*k - .5, xs, y0 + Pt*k + .5]);
     const bun = []; for (let j = 0; j < npass; j++) bun.push([y0 + Pt*np*j, y0 + Pt*(np*j + np - 1)]);
     r.push([-hs, bun[0][0] - .5, -21, bun[0][1] + .5]);
@@ -155,7 +158,8 @@ function init(){
       const lo = bun[j][0] - .5, hi = bun[j+1][1] + .5;
       r.push(j % 2 === 0 ? [xs, lo, hs, hi] : [-hs, lo, -xs, hi]);
     }
-    const last = bun[npass-1]; r.push([-hs, last[0] - .5, -21, last[1] + .5]);
+    const last = bun[npass-1];
+    r.push(npass % 2 ? [21, last[0] - .5, hs, last[1] + .5] : [-hs, last[0] - .5, -21, last[1] + .5]);
     return r;
   })();
   function drawDecals(){
@@ -167,16 +171,18 @@ function init(){
     g.fillText('NCUT', 512, 470);
     if ('letterSpacing' in g) g.letterSpacing = '6px';
     g.fillStyle = 'rgba(226,232,255,.62)'; g.font = '500 34px "IBM Plex Mono", monospace';
-    g.fillText('AEM-25 · REV C · CATHODE', 512, 590);
+    g.fillText('AEM-25 · REV D · CATHODE', 512, 590);
     if ('letterSpacing' in g) g.letterSpacing = '0px';
     faceTex.needsUpdate = true;
-    g = chCv.getContext('2d'); g.clearRect(0, 0, 1024, 1024);
     const px = v => (v + 40) / 80 * 1024, py = v => (40 - v) / 80 * 1024;
-    g.fillStyle = dark ? 'rgba(10,12,16,.62)' : 'rgba(40,36,30,.5)';
-    for (const [x0, y0, x1, y1] of CH) g.fillRect(px(x0), py(y1), px(x1) - px(x0), py(y0) - py(y1));
-    g.setLineDash([10, 8]); g.lineWidth = 3; g.strokeStyle = 'rgba(14,143,114,.75)';
-    g.strokeRect(px(-25), py(25), px(25) - px(-25), py(-25) - py(25)); g.setLineDash([]);
-    chTex.needsUpdate = true;
+    for (const [cv, s] of [[chCv, 1], [chCvM, -1]]){   // chCvM：陰極那片的鏡像流道
+      g = cv.getContext('2d'); g.clearRect(0, 0, 1024, 1024);
+      g.fillStyle = dark ? 'rgba(10,12,16,.62)' : 'rgba(40,36,30,.5)';
+      for (const [x0, y0, x1, y1] of CH){ const a = px(s * x0), b = px(s * x1); g.fillRect(Math.min(a, b), py(y1), Math.abs(b - a), py(y0) - py(y1)); }
+      g.setLineDash([10, 8]); g.lineWidth = 3; g.strokeStyle = 'rgba(14,143,114,.75)';
+      g.strokeRect(px(-25), py(25), px(25) - px(-25), py(-25) - py(25)); g.setLineDash([]);
+    }
+    chTex.needsUpdate = chTexM.needsUpdate = true;
   }
 
   /* ── 建模 ── */
@@ -196,21 +202,26 @@ function init(){
     add(p, new THREE.Mesh(extrude(sh, GEO.ins_t), matOf(p, 'peek')));
     anchor(p, id === 'ins_c' ? -38 : 38, 62, 0);
   }
-  function buildFlow(p){
+  /* 陰極那片是陽極的鏡像零件：流道和進出口左右相反，極耳在同一側。
+   * 轉 180° 裝上後，從同一側看兩片都是左下進、右上出，極耳一左一右。 */
+  function buildFlow(p, mirror){
+    const s = mirror ? -1 : 1, t0 = GEO.tab_x - GEO.tab_w/2, t1 = GEO.tab_x + GEO.tab_w/2;
     add(p, new THREE.Mesh(extrude(rrect(GEO.fp, GEO.fp, 1), GEO.fp_t), matOf(p, 'nickel')));
     const tab = new THREE.Shape();
-    tab.moveTo(-GEO.tab_w/2, 39); tab.lineTo(GEO.tab_w/2, 39); tab.lineTo(GEO.tab_w/2, GEO.tab_top - 2);
-    tab.quadraticCurveTo(GEO.tab_w/2, GEO.tab_top, GEO.tab_w/2 - 2, GEO.tab_top);
-    tab.lineTo(-GEO.tab_w/2 + 2, GEO.tab_top); tab.quadraticCurveTo(-GEO.tab_w/2, GEO.tab_top, -GEO.tab_w/2, GEO.tab_top - 2);
-    tab.lineTo(-GEO.tab_w/2, 39);
+    tab.moveTo(t0, 39); tab.lineTo(t1, 39); tab.lineTo(t1, GEO.tab_top - 2);
+    tab.quadraticCurveTo(t1, GEO.tab_top, t1 - 2, GEO.tab_top);
+    tab.lineTo(t0 + 2, GEO.tab_top); tab.quadraticCurveTo(t0, GEO.tab_top, t0, GEO.tab_top - 2);
+    tab.lineTo(t0, 39);
     tab.holes.push(hole(GEO.lug[0], GEO.lug[1], 3.3), hole(GEO.sense[0], GEO.sense[1], 2.15));
     add(p, new THREE.Mesh(extrude(tab, GEO.tab_t), matOf(p, 'nickel')));
-    decal(p, chTex, GEO.fp, GEO.fp_t/2 + .06);
-    for (const y of GEO.ports_y){ rodX(p, CYL, 'nut', 4.2, 12, -46, y, 0); rodX(p, CYL, 'tube', 1.6, 46, -75, y, 0); }
-    anchor(p, 0, 80, 0);
+    decal(p, mirror ? chTexM : chTex, GEO.fp, GEO.fp_t/2 + .06);
+    const [yIn, yOut] = GEO.ports_y;
+    rodX(p, CYL, 'nut', 4.2, 12, -46 * s, yIn, 0); rodX(p, CYL, 'tube', 1.6, 46, -75 * s, yIn, 0);
+    rodX(p, CYL, 'nut', 4.2, 12, 46 * s, yOut, 0); rodX(p, CYL, 'tube', 1.6, 46, 75 * s, yOut, 0);
+    anchor(p, GEO.tab_x, 80, 0);
   }
-  buildFlow(plate('fp_a', Z.fp_a));
-  const fpc = plate('fp_c', Z.fp_c); buildFlow(fpc); fpc.group.rotation.y = Math.PI;
+  buildFlow(plate('fp_a', Z.fp_a), false);
+  const fpc = plate('fp_c', Z.fp_c); buildFlow(fpc, true); fpc.group.rotation.y = Math.PI;
 
   /* MEA 夾層：實際合計 0.558 mm；拆開時加厚顯示 */
   const windowed = () => { const s = rrect(79.4, 79.4, 1); s.holes.push(new THREE.Path(rrect(GEO.active, GEO.active, .5).getPoints(8))); return s; };
@@ -244,7 +255,7 @@ function init(){
     rodZ(B, CYL, 'steel', 6, 1.6, x, y, Z.ep_c[1] + 2.4 + .8, nuts);
     rodZ(B, HEX, 'steel', 5.77, 5.2, x, y, Z.ep_c[1] + 4.0 + 2.6, nuts);
   }
-  anchor(B, 25, 45, Z.ep_c[1] + 9.5, nuts);
+  anchor(B, 45, -45, Z.ep_c[1] + 9.5, nuts);
 
   const baseY = -GEO.ep/2 - GEO.base[2]/2, BS = P.base; world.add(BS.group);
   { const m = add(BS, new THREE.Mesh(extrude(rrect(GEO.base[0], GEO.base[1], 6), GEO.base[2]), matOf(BS, 'base')));
@@ -566,5 +577,14 @@ function init(){
   document.body.classList.add('gl-ready');
   requestAnimationFrame(loop);
   window.AEM = { select, setExplode: v => { tw = null; setE(v); }, parts: () => Object.keys(P),
-    setView: (pos, tgt) => { userMoved = true; camTw = null; camera.position.set(...pos); controls.target.set(...tgt); needs = true; } };
+    setView: (pos, tgt) => { userMoved = true; camTw = null; camera.position.set(...pos); controls.target.set(...tgt); needs = true; },
+    /* 重新產生首圖、分享圖用：以目前視角輸出 w × h 的透明背景圖，e 是拆開程度 */
+    snap: (w, h, e = E, type = 'image/png') => {
+      const pr = renderer.getPixelRatio(), keepE = E, keepPos = camera.position.clone();
+      tw = null; setE(e); renderer.setPixelRatio(1); renderer.setSize(w, h, false);
+      camera.aspect = w / h; camera.updateProjectionMatrix(); if (!userMoved) camera.position.copy(homePos());
+      controls.update(); applyExplode(); scene.updateMatrixWorld(); renderer.render(scene, camera);
+      const url = renderer.domElement.toDataURL(type, .92);
+      setE(keepE); camera.position.copy(keepPos); renderer.setPixelRatio(pr); resize(); return url;
+    } };
 }

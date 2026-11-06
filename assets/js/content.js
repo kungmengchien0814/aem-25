@@ -1,5 +1,6 @@
-/* AEM-25 Rev C 零件資料（中／英）
+/* AEM-25 Rev D 草案零件資料（中／英）
  * 數字來源：AEM-25 設計審查與 Rev C 實作紀錄（2026-10-14）。
+ * Rev D 草案（2026-11-06）改了極耳、進出口、流道和螺栓排列，受影響的數字標「待重算」。
  * 改數字時，index.html 的「關鍵數字」與「規格」兩段也要一起改。 */
 
 export const PARTS = [
@@ -9,7 +10,7 @@ export const PARTS = [
     mat:  { zh: '6061-T6 鋁，硬陽極處理（藍）', en: '6061-T6 aluminium, hard-anodised (blue)' },
     dims: [
       { k: { zh: '外形', en: 'Size' }, v: '110 × 110 × 25 mm, R8' },
-      { k: { zh: '螺栓孔', en: 'Bolt holes' }, v: { zh: '8 個 M6，半徑 51.48 mm 圓周', en: '8 × M6 on a 51.48 mm radius' } },
+      { k: { zh: '螺栓孔', en: 'Bolt holes' }, v: { zh: '8 個 M6，四角加四邊中點（邊長 90 mm）', en: '8 × M6 at the corners and edge midpoints of a 90 mm square' } },
     ],
     desc: {
       zh: '承受八支螺栓的夾持力，筒式加熱器也裝在端板裡。鋁的導熱係數 167 W/m·K，約是 316L 的十倍，整片也輕得多。代價是鋁會被 KOH 溶解，所以端板從頭到尾不接觸電解液。',
@@ -34,15 +35,15 @@ export const PARTS = [
     mat:  { zh: '實心鎳', en: 'Solid nickel' },
     dims: [
       { k: { zh: '外形', en: 'Size' }, v: '80 × 80 × 15 mm' },
-      { k: { zh: '極耳', en: 'Tab' }, v: '36 × 34 × 6 mm' },
-      { k: { zh: '流道', en: 'Channels' }, v: { zh: '24 條 1.00 × 1.00 mm，總長 328 mm', en: '24 × 1.00 × 1.00 mm, 328 mm total' } },
-      { k: { zh: '進出口', en: 'Ports' }, v: '2 × 1/4-28 UNF' },
+      { k: { zh: '極耳', en: 'Tab' }, v: { zh: '28 × 34 × 6 mm，上緣右側', en: '28 × 34 × 6 mm, top right' } },
+      { k: { zh: '流道', en: 'Channels' }, v: { zh: '25 條 1.00 × 1.00 mm，總長約 280 mm', en: '25 × 1.00 × 1.00 mm, about 280 mm total' } },
+      { k: { zh: '進出口', en: 'Ports' }, v: { zh: '2 × 1/4-28 UNF，左下進、右上出', en: '2 × 1/4-28 UNF, in at lower left, out at upper right' } },
     ],
     desc: {
-      zh: '流道是 4 通道並聯的蛇形，走 6 個來回，電解液下進上出。極耳從板厚正中央直接銑出來：M6 孔接電流，Ø4.3 孔接四線量測的電壓線，量電壓的線上沒有電流。',
-      en: 'A four-channel serpentine runs six passes, with electrolyte entering at the bottom and leaving at the top. The current tab is machined from the mid-thickness of the plate: the M6 hole carries current and the Ø4.3 hole takes the four-wire voltage sense lead, which carries none.'
+      zh: '流道是 5 通道並聯的蛇形，走 5 個道次，電解液左下進、右上出。道次是奇數，出口才會落在進口的對角。極耳在上緣右側，從板厚正中央直接銑出來：M6 孔接電流，Ø4.3 孔接四線量測的電壓線，量電壓的線上沒有電流。',
+      en: 'A five-channel serpentine runs five passes, with electrolyte entering at the lower left and leaving at the upper right. An odd number of passes is what puts the outlet diagonally opposite the inlet. The current tab sits at the top right, machined from the mid-thickness of the plate: the M6 hole carries current and the Ø4.3 hole takes the four-wire voltage sense lead, which carries none.'
     },
-    note: { zh: '陰陽極兩片是同一個零件，這片轉 180° 裝，所以兩片極耳自動錯開 9.56 mm。', en: 'Anode and cathode plates are the same part. This one is rotated 180°, which sets the two tabs 9.56 mm apart.' },
+    note: { zh: '陰陽極兩片的流道互為鏡像，是兩個零件：從陰極側看，兩片都是左下進、右上出，極耳一左一右，相隔 16 mm。', en: 'The anode and cathode plates are mirror images, so they are two parts: seen from the cathode side both run from lower left to upper right, and their tabs sit 16 mm apart, one on each side.' },
   },
   {
     id: 'gk_c', side: 'c',
@@ -111,13 +112,14 @@ export const PARTS = [
     mat:  { zh: '實心鎳', en: 'Solid nickel' },
     dims: [
       { k: { zh: '外形', en: 'Size' }, v: '80 × 80 × 15 mm' },
-      { k: { zh: '流道', en: 'Channels' }, v: { zh: '4 通道蛇形 × 6 道次', en: '4-channel serpentine × 6 passes' } },
+      { k: { zh: '極耳', en: 'Tab' }, v: { zh: '28 × 34 × 6 mm，上緣左側（從陰極側看）', en: '28 × 34 × 6 mm, top left (seen from the cathode side)' } },
+      { k: { zh: '流道', en: 'Channels' }, v: { zh: '5 通道蛇形 × 5 道次', en: '5-channel serpentine × 5 passes' } },
     ],
     desc: {
-      zh: '和陰極流道板是同一個零件，正向安裝。Rev C 改用實心鎳，取代 Rev B 的 316L 鍍鎳（10–15 µm）。',
-      en: 'The same part as the cathode flow plate, installed the right way round. Rev C makes it from solid nickel, replacing the 316L with 10–15 µm nickel plating used in Rev B.'
+      zh: '流道和陰極那片互為鏡像，所以從同一側看，兩片都是左下進、右上出。Rev C 改用實心鎳，取代 Rev B 的 316L 鍍鎳（10–15 µm）。',
+      en: 'Its flow field mirrors the cathode plate, so seen from the same side both run from lower left to upper right. Rev C makes it from solid nickel, replacing the 316L with 10–15 µm nickel plating used in Rev B.'
     },
-    note: { zh: '60 mL/min 時液相壓損約 1.52 kPa（Rev B 計算值）。', en: 'Liquid pressure drop is about 1.52 kPa at 60 mL/min (Rev B calculation).' },
+    note: { zh: '液相壓損待重算：Rev B 的 6 道次在 60 mL/min 時約 1.52 kPa，改成 5 道次後等比例粗估約 1.0 kPa。', en: 'Liquid pressure drop is to be recalculated: Rev B’s six passes gave about 1.52 kPa at 60 mL/min, and scaling to five passes gives roughly 1.0 kPa.' },
   },
   {
     id: 'ins_a', side: 'a',
@@ -147,6 +149,7 @@ export const PARTS = [
     mat:  { zh: 'A4-70 不鏽鋼螺栓、絕緣套管、碟簧', en: 'A4-70 stainless bolts, insulating sleeves, disc springs' },
     dims: [
       { k: { zh: '螺栓', en: 'Bolts' }, v: '8 × M6 × 100' },
+      { k: { zh: '排列', en: 'Pattern' }, v: { zh: '四角加四邊中點，邊長 90 mm', en: 'Corners and edge midpoints of a 90 mm square' } },
       { k: { zh: '碟簧', en: 'Springs' }, v: { zh: '每支 3 片 DIN 2093 A 12.5 × 6.2 × 0.7，並聯', en: '3 × DIN 2093 A 12.5 × 6.2 × 0.7 per bolt, in parallel' } },
       { k: { zh: '扭力', en: 'Torque' }, v: '1.0 N·m (0.8–1.2, max 1.3)' },
       { k: { zh: '夾持高度', en: 'Stack height' }, v: '81.558 mm' },
@@ -155,7 +158,7 @@ export const PARTS = [
       zh: '扭力由墊片密封面需要的 5 MPa 反推，只要 1.0 N·m，比一般扭力扳手的量程還低，所以要用 0.3–2.0 N·m 的扭力起子。碟簧吸收升溫到 60 °C 時每支約 120 N 的軸力變化。',
       en: 'Torque is back-calculated from the 5 MPa the gasket seal needs, which gives just 1.0 N·m. That sits below the range of a typical torque wrench, so assembly uses a 0.3–2.0 N·m torque screwdriver. The disc springs absorb about 120 N of axial change per bolt when the cell heats to 60 °C.'
     },
-    note: { zh: '碟簧利用率 43 %，扭力多 25 % 時 54 %，不會被壓平。', en: 'Spring utilisation is 43 %, rising to 54 % at +25 % torque, so the springs never bottom out.' },
+    note: { zh: '碟簧利用率 43 %，扭力多 25 % 時 54 %，不會被壓平。Rev D 把螺栓改成四角加四邊中點，讓出上緣給兩個極耳；扭力和碟簧仍是 Rev C 的計算值，墊片受力分布待重算。', en: 'Spring utilisation is 43 %, rising to 54 % at +25 % torque, so the springs never bottom out. Rev D moves the bolts to the corners and edge midpoints to clear the top edge for the two tabs; torque and spring figures are still the Rev C calculation, and the gasket load distribution is to be recalculated.' },
   },
   {
     id: 'base', side: 'x',

@@ -8,7 +8,7 @@ AEM-25 是陰離子交換膜（AEM）水電解用的 25 cm² 單電池測試治�
 
 AEM-25 is a 25 cm² single-cell test fixture for anion exchange membrane (AEM) water electrolysis, testing one MEA in 1 M KOH at 60 °C. The site presents its 13 part groups as an interactive 3D exploded view: drag to rotate, slide to take it apart, and click any part for its material, dimensions and design rationale.
 
-> **設計階段 / Design stage.** 治具尚未加工。數字來自 2026-10-14 的 Rev C 設計文件。The fixture has not been machined yet; figures come from the Rev C design documents dated 2026-10-14.
+> **設計階段 / Design stage.** 治具尚未加工。數字來自 2026-10-14 的 Rev C 設計文件；2026-11-06 的 Rev D 草案改了極耳、進出口、流道和螺栓排列，受影響的數字標「待重算」。The fixture has not been machined yet; figures come from the Rev C design documents dated 2026-10-14, and the Rev D draft of 2026-11-06 changed the tabs, ports, flow field and bolt pattern, with the affected figures marked as to be recalculated.
 
 ## 功能 / Features
 
@@ -38,6 +38,9 @@ When a figure changes, update `content.js` and the numbers and specs sections in
 
 Cloudflare 會快取 CSS 和 JS 4 小時，所以改了這些檔案要一起換 `?v=`：`index.html` 三處，`assets/js/app.js` 匯入 `content.js` 一處。
 Cloudflare caches CSS and JS for 4 hours, so bump `?v=` whenever they change: three places in `index.html` and the `content.js` import in `assets/js/app.js`.
+
+首圖 `hero.webp` 和分享圖 `og.png` 是 3D 模型的截圖，模型改了要重新產生：在頁面主控台執行 `AEM.snap(寬, 高, 拆開程度)`，會傳回透明背景的圖片網址（首圖用淺色主題截）。圖片也被快取 4 小時，換圖時 `index.html` 的首圖和 `og:image` 兩處 `?v=` 也要一起換。
+`hero.webp` and `og.png` are renders of the 3D model, so regenerate them when the model changes: `AEM.snap(width, height, explode)` in the page console returns a transparent-background image URL (render the hero in the light theme). Images are cached for 4 hours too, so bump `?v=` on the hero and `og:image` in `index.html` when they change.
 
 ## 本機預覽 / Local preview
 
