@@ -8,7 +8,7 @@ AEM-25 是陰離子交換膜（AEM）水電解用的 25 cm² 單電池測試治�
 
 AEM-25 is a 25 cm² single-cell test fixture for anion exchange membrane (AEM) water electrolysis, testing one MEA in 1 M KOH at 60 °C. The site presents its 13 part groups as an interactive 3D exploded view: drag to rotate, slide to take it apart, and click any part for its material, dimensions and design rationale.
 
-> **設計階段 / Design stage.** 治具尚未加工。數字來自 2026-10-14 的 Rev C 設計文件；2026-11-06 的 Rev D 草案改了極耳、進出口、流道和螺栓排列，受影響的數字標「待重算」。The fixture has not been machined yet; figures come from the Rev C design documents dated 2026-10-14, and the Rev D draft of 2026-11-06 changed the tabs, ports, flow field and bolt pattern, with the affected figures marked as to be recalculated.
+> **設計階段 / Design stage.** 治具尚未加工。數字來自 2026-11-06 的 Rev D 設計文件（極耳一左一右、兩片流道左下進右上出、螺栓排成 90 mm 正方形）。The fixture has not been machined yet; figures come from the Rev D design documents dated 2026-11-06 (tabs side by side, both flow fields running lower left to upper right, bolts on a 90 mm square).
 
 ## 功能 / Features
 

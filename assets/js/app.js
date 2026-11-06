@@ -3,7 +3,7 @@
  * 依賴：index.html 的 importmap（three、three/addons）、content.js（零件文字）。 */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { PARTS, UI } from './content.js?v=20261106a';
+import { PARTS, UI } from './content.js?v=20261106b';
 
 const $ = id => document.getElementById(id);
 const ZK = /Mac|iPhone|iPad/.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '') ? '⌘' : 'Ctrl';
@@ -35,15 +35,22 @@ function init(){
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-  /* ═══ DATA: 幾何（AEM-25 Rev D 草案，mm） ═══
-   * Rev D 相對 Rev C：極耳移到上緣一側（像「凹」去掉一邊），兩片一左一右；
-   * 進出口改成對角，流道改 5 道次；螺栓改成四角加四邊中點，讓出上緣給極耳。 */
+  /* ═══ DATA: 幾何（AEM-25 Rev D，mm；來源 geom.py） ═══ */
   const MIL = 0.0254;
   const GEO = {
     ep: 110, ep_t: 25, ep_r: 8, fp: 80, fp_t: 15, ins_t: 0.5,
     gasket: 10 * MIL, mem: 0.050, mea: 66, active: 50,
-    tab_x: -22, tab_w: 28, tab_top: 74, tab_t: 6, lug: [-29, 64], sense: [-15, 64],
-    ports_y: [-20, 20], base: [150, 100, 15],
+    win_a: 50.5, win_c: 51.5, ptl_a: 50, ptl_c: 51,
+    /* 極耳：上緣一端的 28 × 34 矩形（板身 + 極耳＝「凹」去掉一邊的凸出），零件自身座標，兩片相同。
+       陰極板轉 180° 裝上後，它的極耳落在 +X：從陰極端看陰極在右上、陽極在左上，相隔 16 mm */
+    tab: { x0: -36, x1: -8, top: 74, r: 2, t: 6 },
+    lug: [-29, 64], sense: [-15, 64],
+    /* 流體埠：立管 (∓23, ∓20)，埠沿 X 直出側面 y = ∓20；port_deg 保留一般化（0 = 直出） */
+    riser: [23, 20], port_deg: 0, fptc_y: -10,
+    /* PEEK 定位銷 Ø4 × 8.5：兩片流道板各有 4 個 Ø4.1 × 4.5 銷孔 (±36, ±36)，只用 (36, 36)／(−36, −36) 兩支；墊片孔 Ø4.3 */
+    pin: { r: 2, len: 8.5, at: 36, bore_r: 2.05, shim_r: 2.15 },
+    base: [150, 100, 15],
+    /* 8 支拉桿：90 mm 正方形的四角加四邊中點，上方中間那支從兩片極耳之間穿過 */
     bolts: [[-45,-45],[0,-45],[45,-45],[-45,0],[45,0],[-45,45],[0,45],[45,45]],
   };
   const MEAZ = 2 * GEO.gasket + GEO.mem;                         // 0.558
@@ -131,8 +138,9 @@ function init(){
     const m = new THREE.Mesh(geo, matOf(p, name)); m.scale.set(mm(r), mm(len), mm(r)); m.rotation.x = Math.PI/2;
     m.position.set(mm(x), mm(y), mm(z)); return add(p, m, parent);
   };
-  const rodX = (p, geo, name, r, len, x, y, z) => {
-    const m = new THREE.Mesh(geo, matOf(p, name)); m.scale.set(mm(r), mm(len), mm(r)); m.rotation.z = Math.PI/2;
+  /* 軸線在 XY 平面、方向 (dx, dy) 的圓柱（CylinderGeometry 的軸是 +Y） */
+  const rodXY = (p, geo, name, r, len, x, y, z, dx, dy) => {
+    const m = new THREE.Mesh(geo, matOf(p, name)); m.scale.set(mm(r), mm(len), mm(r)); m.rotation.z = Math.atan2(-dx, dy);
     m.position.set(mm(x), mm(y), mm(z)); return add(p, m);
   };
   const decal = (p, tex, size, z) => {
@@ -144,24 +152,25 @@ function init(){
 
   /* ── 貼圖 ── */
   const faceCv = document.createElement('canvas'); faceCv.width = faceCv.height = 1024;
-  const chCv = document.createElement('canvas'); chCv.width = chCv.height = 1024;
-  const chCvM = document.createElement('canvas'); chCvM.width = chCvM.height = 1024;
-  const faceTex = new THREE.CanvasTexture(faceCv), chTex = new THREE.CanvasTexture(chCv), chTexM = new THREE.CanvasTexture(chCvM);
-  [faceTex, chTex, chTexM].forEach(t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; });
-  /* 流道：5 通道並聯 × 5 道次，25 條 1 × 1 mm，節距 2 mm。道次是奇數，出口才會在進口的對角 */
-  const CH = (() => {
-    const r = [], np = 5, npass = 5, n = np * npass, Pt = 2, y0 = -24, xs = 23, hs = 25;
+  const faceTex = new THREE.CanvasTexture(faceCv);
+  /* 兩片流道板的流道互為鏡像，各用一張貼圖：A = 陽極 002A，C = 陰極 002C */
+  const chCv = { A: document.createElement('canvas'), C: document.createElement('canvas') };
+  const chTex = {};
+  for (const h of ['A', 'C']){ chCv[h].width = chCv[h].height = 1024; chTex[h] = new THREE.CanvasTexture(chCv[h]); }
+  [faceTex, chTex.A, chTex.C].forEach(t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; });
+  /* 流道：5 通道並聯 × 5 道次，25 條 1 × 1 mm，節距 2 mm。奇數道次讓出口落在入口的對側。
+     m = +1 陽極 002A（入口在零件 −X 下方）、−1 陰極 002C（鏡像）；座標為零件自身座標 */
+  const chRects = (m) => {
+    const r = [], n = 25, Pt = 2, y0 = -24, xs = 23, hs = 25, np = 5, npass = 5;
     for (let k = 0; k < n; k++) r.push([-xs, y0 + Pt*k - .5, xs, y0 + Pt*k + .5]);
     const bun = []; for (let j = 0; j < npass; j++) bun.push([y0 + Pt*np*j, y0 + Pt*(np*j + np - 1)]);
-    r.push([-hs, bun[0][0] - .5, -21, bun[0][1] + .5]);
-    for (let j = 0; j < npass - 1; j++){
-      const lo = bun[j][0] - .5, hi = bun[j+1][1] + .5;
-      r.push(j % 2 === 0 ? [xs, lo, hs, hi] : [-hs, lo, -xs, hi]);
-    }
-    const last = bun[npass-1];
-    r.push(npass % 2 ? [21, last[0] - .5, hs, last[1] + .5] : [-hs, last[0] - .5, -21, last[1] + .5]);
+    const hdr = (side, lo, hi, w) => side < 0 ? [-hs, lo, -hs + w, hi] : [hs - w, lo, hs, hi];
+    r.push(hdr(-m, bun[0][0] - .5, bun[0][1] + .5, 4));                                    // 入口集流槽，寬 4
+    for (let j = 0; j < npass - 1; j++) r.push(hdr(m * (j % 2 === 0 ? 1 : -1), bun[j][0] - .5, bun[j+1][1] + .5, 2));
+    r.push(hdr(m * (npass % 2 ? 1 : -1), bun[npass-1][0] - .5, bun[npass-1][1] + .5, 4));  // 出口集流槽
     return r;
-  })();
+  };
+  const CH = { A: chRects(1), C: chRects(-1) };
   function drawDecals(){
     const dark = isDark();
     let g = faceCv.getContext('2d'); g.clearRect(0, 0, 1024, 1024);
@@ -175,14 +184,17 @@ function init(){
     if ('letterSpacing' in g) g.letterSpacing = '0px';
     faceTex.needsUpdate = true;
     const px = v => (v + 40) / 80 * 1024, py = v => (40 - v) / 80 * 1024;
-    for (const [cv, s] of [[chCv, 1], [chCvM, -1]]){   // chCvM：陰極那片的鏡像流道
-      g = cv.getContext('2d'); g.clearRect(0, 0, 1024, 1024);
+    for (const h of ['A', 'C']){
+      g = chCv[h].getContext('2d'); g.clearRect(0, 0, 1024, 1024);
       g.fillStyle = dark ? 'rgba(10,12,16,.62)' : 'rgba(40,36,30,.5)';
-      for (const [x0, y0, x1, y1] of CH){ const a = px(s * x0), b = px(s * x1); g.fillRect(Math.min(a, b), py(y1), Math.abs(b - a), py(y0) - py(y1)); }
+      for (const [x0, y0, x1, y1] of CH[h]) g.fillRect(px(x0), py(y1), px(x1) - px(x0), py(y0) - py(y1));
+      for (const sx of [-1, 1]) for (const sy of [-1, 1]){                       // 四角的定位銷孔
+        g.beginPath(); g.arc(px(sx * GEO.pin.at), py(sy * GEO.pin.at), GEO.pin.bore_r / 80 * 1024, 0, Math.PI * 2); g.fill();
+      }
       g.setLineDash([10, 8]); g.lineWidth = 3; g.strokeStyle = 'rgba(14,143,114,.75)';
       g.strokeRect(px(-25), py(25), px(25) - px(-25), py(-25) - py(25)); g.setLineDash([]);
+      chTex[h].needsUpdate = true;
     }
-    chTex.needsUpdate = chTexM.needsUpdate = true;
   }
 
   /* ── 建模 ── */
@@ -191,7 +203,7 @@ function init(){
 
   for (const id of ['ep_c', 'ep_a']){
     const p = plate(id, Z[id]);
-    const sh = rrect(GEO.ep, GEO.ep, GEO.ep_r); GEO.bolts.forEach(([x,y]) => sh.holes.push(hole(x, y, 4.2)));
+    const sh = rrect(GEO.ep, GEO.ep, GEO.ep_r); GEO.bolts.forEach(([x,y]) => sh.holes.push(hole(x, y, 3.3)));
     add(p, new THREE.Mesh(extrude(sh, GEO.ep_t - 1, true), matOf(p, 'blue')));
     if (id === 'ep_c') decal(p, faceTex, 104, GEO.ep_t/2 + .9);
     anchor(p, id === 'ep_c' ? -38 : 38, 62, 0);
@@ -202,35 +214,55 @@ function init(){
     add(p, new THREE.Mesh(extrude(sh, GEO.ins_t), matOf(p, 'peek')));
     anchor(p, id === 'ins_c' ? -38 : 38, 62, 0);
   }
-  /* 陰極那片是陽極的鏡像零件：流道和進出口左右相反，極耳在同一側。
-   * 轉 180° 裝上後，從同一側看兩片都是左下進、右上出，極耳一左一右。 */
-  function buildFlow(p, mirror){
-    const s = mirror ? -1 : 1, t0 = GEO.tab_x - GEO.tab_w/2, t1 = GEO.tab_x + GEO.tab_w/2;
-    add(p, new THREE.Mesh(extrude(rrect(GEO.fp, GEO.fp, 1), GEO.fp_t), matOf(p, 'nickel')));
-    const tab = new THREE.Shape();
-    tab.moveTo(t0, 39); tab.lineTo(t1, 39); tab.lineTo(t1, GEO.tab_top - 2);
-    tab.quadraticCurveTo(t1, GEO.tab_top, t1 - 2, GEO.tab_top);
-    tab.lineTo(t0 + 2, GEO.tab_top); tab.quadraticCurveTo(t0, GEO.tab_top, t0, GEO.tab_top - 2);
-    tab.lineTo(t0, 39);
-    tab.holes.push(hole(GEO.lug[0], GEO.lug[1], 3.3), hole(GEO.sense[0], GEO.sense[1], 2.15));
-    add(p, new THREE.Mesh(extrude(tab, GEO.tab_t), matOf(p, 'nickel')));
-    decal(p, mirror ? chTexM : chTex, GEO.fp, GEO.fp_t/2 + .06);
-    const [yIn, yOut] = GEO.ports_y;
-    rodX(p, CYL, 'nut', 4.2, 12, -46 * s, yIn, 0); rodX(p, CYL, 'tube', 1.6, 46, -75 * s, yIn, 0);
-    rodX(p, CYL, 'nut', 4.2, 12, 46 * s, yOut, 0); rodX(p, CYL, 'tube', 1.6, 46, 75 * s, yOut, 0);
-    anchor(p, GEO.tab_x, 80, 0);
+  /* 極耳輪廓（零件自身座標，兩片相同）：上緣 −X 端 28 × 34，上方兩角 R2 */
+  function tabShape(){
+    const T = GEO.tab, s = new THREE.Shape(), y0 = 39;                  // 伸進板身 1 mm，避免接縫
+    s.moveTo(T.x0, y0); s.lineTo(T.x1, y0);
+    s.lineTo(T.x1, T.top - T.r); s.quadraticCurveTo(T.x1, T.top, T.x1 - T.r, T.top);
+    s.lineTo(T.x0 + T.r, T.top); s.quadraticCurveTo(T.x0, T.top, T.x0, T.top - T.r);
+    s.lineTo(T.x0, y0);
+    s.holes.push(hole(GEO.lug[0], GEO.lug[1], 3.3), hole(GEO.sense[0], GEO.sense[1], 2.15));
+    return s;
   }
-  buildFlow(plate('fp_a', Z.fp_a), false);
-  const fpc = plate('fp_c', Z.fp_c); buildFlow(fpc, true); fpc.group.rotation.y = Math.PI;
+  /* 流體埠（零件自身座標）：face = 埠軸線與側面的交點，dir = 朝外單位向量 */
+  function portsOf(m){
+    const a = GEO.port_deg * Math.PI / 180, [xr, yr] = GEO.riser, out = [];
+    for (const [side, ys] of [[-m, -1], [m, 1]]){                       // 入口（下）、出口（上）
+      const fy = ys * (yr - (GEO.fp / 2 - xr) * Math.tan(a));              // ∓20（直出）
+      out.push({ face: [side * GEO.fp / 2, fy], dir: [side * Math.cos(a), -ys * Math.sin(a)] });
+    }
+    return out;
+  }
+  function buildFlow(p, m){                                              // m = +1 陽極 002A、−1 陰極 002C
+    add(p, new THREE.Mesh(extrude(rrect(GEO.fp, GEO.fp, 1), GEO.fp_t), matOf(p, 'nickel')));
+    add(p, new THREE.Mesh(extrude(tabShape(), GEO.tab.t), matOf(p, 'nickel')));
+    decal(p, m > 0 ? chTex.A : chTex.C, GEO.fp, GEO.fp_t/2 + .06);
+    for (const { face: [fx, fy], dir: [dx, dy] } of portsOf(m)){
+      rodXY(p, CYL, 'nut', 4.75, 12, fx + dx * 6, fy + dy * 6, 0, dx, dy);              // 滾花螺帽 Ø9.5（上限 Ø10.5）
+      rodXY(p, CYL, 'tube', 1.6, 46, fx + dx * 35, fy + dy * 35, 0, dx, dy);            // 1/8" PFA 管
+    }
+    const tx = m * GEO.fp / 2;                                           // 板身熱偶：出口那一側，y = −10
+    rodXY(p, CYL, 'steel', 1.6, 34, tx + m * 17, GEO.fptc_y, 0, m, 0);
+    anchor(p, (GEO.tab.x0 + GEO.tab.x1) / 2, GEO.tab.top + 6, 0);       // 圖釘放在自己的極耳上方
+  }
+  const fpa = plate('fp_a', Z.fp_a); buildFlow(fpa, 1);
+  const fpc = plate('fp_c', Z.fp_c); buildFlow(fpc, -1); fpc.group.rotation.y = Math.PI;
+  /* 定位銷先裝在陽極板，在兩板之間置中（各插進約 4 mm），所以拆開時跟著陽極板走 */
+  for (const s of [1, -1]) rodZ(fpa, CYL, 'peek', GEO.pin.r, GEO.pin.len, s * GEO.pin.at, s * GEO.pin.at, MEAZ / 2 - fpa.base);
 
   /* MEA 夾層：實際合計 0.558 mm；拆開時加厚顯示 */
-  const windowed = () => { const s = rrect(79.4, 79.4, 1); s.holes.push(new THREE.Path(rrect(GEO.active, GEO.active, .5).getPoints(8))); return s; };
+  /* 墊片窗口：陽極 50.5、陰極 51.5（兩道切邊錯開 0.5）；PTL 陽極 50、陰極 51 */
+  const windowed = (w) => () => {
+    const s = rrect(79.4, 79.4, 1); s.holes.push(new THREE.Path(rrect(w, w, .5).getPoints(8)));
+    for (const sx of [-1, 1]) for (const sy of [-1, 1]) s.holes.push(hole(sx * GEO.pin.at, sy * GEO.pin.at, GEO.pin.shim_r));
+    return s;
+  };
   const MEA = [
-    { id: 'gk_c', mat: 'ptfe', z: [MEAZ - GEO.gasket, MEAZ], vis: 1.4, j:  2, shape: windowed, a: [-34, 46] },
-    { id: 'pt_c', mat: 'felt', z: [MEAZ - GEO.gasket, MEAZ], vis: 1.8, j:  1, shape: () => rrect(49.6, 49.6, .4), a: [-12, 20] },
+    { id: 'gk_c', mat: 'ptfe', z: [MEAZ - GEO.gasket, MEAZ], vis: 1.4, j:  2, shape: windowed(GEO.win_c), a: [-34, 46] },
+    { id: 'pt_c', mat: 'felt', z: [MEAZ - GEO.gasket, MEAZ], vis: 1.8, j:  1, shape: () => rrect(GEO.ptl_c, GEO.ptl_c, .4), a: [-12, 20] },
     { id: 'mem',  mat: 'mem',  z: [GEO.gasket, GEO.gasket + GEO.mem], vis: .8, j: 0, shape: () => rrect(GEO.mea, GEO.mea, .6), a: [-20, 40] },
-    { id: 'pt_a', mat: 'felt', z: [0, GEO.gasket], vis: 1.8, j: -1, shape: () => rrect(49.6, 49.6, .4), a: [12, 20] },
-    { id: 'gk_a', mat: 'ptfe', z: [0, GEO.gasket], vis: 1.4, j: -2, shape: windowed, a: [34, 46] },
+    { id: 'pt_a', mat: 'felt', z: [0, GEO.gasket], vis: 1.8, j: -1, shape: () => rrect(GEO.ptl_a, GEO.ptl_a, .4), a: [12, 20] },
+    { id: 'gk_a', mat: 'ptfe', z: [0, GEO.gasket], vis: 1.4, j: -2, shape: windowed(GEO.win_a), a: [34, 46] },
   ];
   for (const L of MEA){
     const p = P[L.id]; Object.assign(p, { base: (L.z[0] + L.z[1]) / 2, real: L.z[1] - L.z[0], vis: L.vis, j: L.j });
@@ -245,15 +277,21 @@ function init(){
     const pts = [[6.25, 0], [6.25, .7], [3.1, 1.0], [3.1, .3], [6.25, 0]].map(([r, y]) => new THREE.Vector2(r, y));
     const g = new THREE.LatheGeometry(pts, 36); g.scale(S, S, S); g.rotateX(Math.PI/2); return g;
   })();
+  /* 螺栓頭側（外→內）：內六角頭 Ø10 × 6｜鋼墊圈｜PEEK 墊圈｜陽極端板
+     螺帽側（內→外）：陰極端板｜PEEK 墊圈｜鋼墊圈｜3 片碟簧並聯｜尼龍螺帽；兩片絕緣片之間套 PTFE 套管 */
+  const zH = Z.ep_a[0], zN = Z.ep_c[1], sleeveZ = (Z.ins_a[1] + Z.ins_c[0]) / 2;
   for (const [x, y] of GEO.bolts){
-    rodZ(B, CYL, 'steel', 3, 96, x, y, Z.ep_a[0] - 1.6 + 48, heads);
-    rodZ(B, CYL, 'steel', 6, 1.6, x, y, Z.ep_a[0] - .8, heads);
-    rodZ(B, HEX, 'steel', 5.77, 4, x, y, Z.ep_a[0] - 3.6, heads);
+    rodZ(B, CYL, 'steel', 2.95, 100, x, y, zH - 3.2 + 50, heads);         // M6 × 100 桿身
+    rodZ(B, CYL, 'peek', 6, 1.6, x, y, zH - .8, heads);
+    rodZ(B, CYL, 'steel', 6, 1.6, x, y, zH - 2.4, heads);
+    rodZ(B, CYL, 'steel', 5, 6, x, y, zH - 6.2, heads);                     // 內六角圓柱頭
+    rodZ(B, CYL, 'ptfe', 4, 30.1, x, y, sleeveZ, heads);                    // PTFE 套管 Ø8
+    rodZ(B, CYL, 'peek', 6, 1.6, x, y, zN + .8, nuts);
+    rodZ(B, CYL, 'steel', 6, 1.6, x, y, zN + 2.4, nuts);
     for (let k = 0; k < 3; k++){
-      const d = new THREE.Mesh(disc, matOf(B, 'steel')); d.position.set(mm(x), mm(y), mm(Z.ep_c[1] + k * .7)); add(B, d, nuts);
+      const d = new THREE.Mesh(disc, matOf(B, 'steel')); d.position.set(mm(x), mm(y), mm(zN + 3.2 + k * .7)); add(B, d, nuts);
     }
-    rodZ(B, CYL, 'steel', 6, 1.6, x, y, Z.ep_c[1] + 2.4 + .8, nuts);
-    rodZ(B, HEX, 'steel', 5.77, 5.2, x, y, Z.ep_c[1] + 4.0 + 2.6, nuts);
+    rodZ(B, HEX, 'steel', 5.77, 6, x, y, zN + 5.6 + 3, nuts);              // DIN 985 尼龍螺帽
   }
   anchor(B, 45, -45, Z.ep_c[1] + 9.5, nuts);
 
@@ -293,7 +331,11 @@ function init(){
   function paint(){
     const pal = isDark() ? PAL.dark : PAL.light;
     for (const id in P) for (const m of P[id].mats){
-      if (m.userData.pal){ m.color.setHex(pal[m.userData.pal]); m.emissive.setHex(pal.hi); }
+      if (m.userData.pal){
+        const c0 = m.userData.c0 = new THREE.Color(pal[m.userData.pal]); m.userData.c1 = new THREE.Color(pal.hi);
+        m.userData.tw = sm(.5, .85, .2126 * c0.r + .7152 * c0.g + .0722 * c0.b);   // 線性亮度：只有白色系（PTFE、管）會偏色
+        m.color.copy(c0); m.emissive.setHex(pal.hi);
+      }
     }
     if (scene.environment) scene.environment.dispose();
     scene.environment = buildEnv();
@@ -353,6 +395,9 @@ function init(){
   }
   function stepParts(){
     let moving = false;
+    /* 淺色背景上，白色的墊片和管子光靠 emissive 看不出被選中：選中時底色往強調色偏 50 %
+       （只對白色系，見 paint() 的 tw；鎳、PEEK、鋼維持原色；深色模式不偏） */
+    const tint = isDark() ? 0 : .5;
     for (const id in P){
       const p = P[id];
       const dOp = p.opT - p.op, dHl = p.hlT - p.hl;
@@ -363,6 +408,7 @@ function init(){
         for (const m of p.mats){
           m.opacity = m.userData.op0 * p.op; m.depthWrite = p.op > .6 && !m.map;
           if (m.emissive) m.emissiveIntensity = p.hl * .1;
+          if (m.userData.c0) m.color.copy(m.userData.c0).lerp(m.userData.c1, p.hl * tint * m.userData.tw);
         }
         p.group.traverse(o => { if (o.isMesh) o.castShadow = p.op > .6 && o.material.isMeshStandardMaterial && p.id !== 'base'; });
         moving = true;
@@ -516,15 +562,19 @@ function init(){
   /* ── 圖釘位置 ── */
   const v3 = new THREE.Vector3();
   let W = 1, H = 1;
+  /* 圖釘互相重疊時（手機上常見），選中的優先，其次照編號；後來的那顆先藏起來，清單仍可點 */
+  const pinOrder = () => Object.keys(P).sort((a, b) => (b === sel) - (a === sel) || P[a].idx - P[b].idx);
   function updatePins(){
-    const innerOp = sm(.22, .42, E);
-    for (const id in P){
+    const innerOp = sm(.22, .42, E), placed = [], gap = W < 600 ? 32 : 26;
+    for (const id of pinOrder()){
       const p = P[id], b = pins[id];
       let op = INNER.has(id) ? innerOp : 1;
       if (sel && id !== sel) op *= .45;
       p.anchor.getWorldPosition(v3); v3.project(camera);
-      if (v3.z > 1 || op < .05){ b.style.opacity = 0; b.style.pointerEvents = 'none'; b.tabIndex = -1; continue; }
       const x = (v3.x * .5 + .5) * W, y = (-v3.y * .5 + .5) * H;
+      if (op >= .05 && placed.some(([qx, qy]) => Math.hypot(qx - x, qy - y) < gap)) op = 0;
+      if (v3.z > 1 || op < .05){ b.style.opacity = 0; b.style.pointerEvents = 'none'; b.tabIndex = -1; continue; }
+      placed.push([x, y]);
       b.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) translate(-50%,-50%)';
       b.style.opacity = op; b.style.pointerEvents = op > .3 ? 'auto' : 'none'; b.tabIndex = op > .3 ? 0 : -1;
     }

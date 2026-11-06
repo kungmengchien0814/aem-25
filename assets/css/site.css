@@ -199,7 +199,7 @@ html[lang="en"] .dims div{grid-template-columns:7.5em 1fr}
 .card .pn{font:500 11.5px var(--f-mono);letter-spacing:.12em;color:var(--ink-3)}
 .card h3{font-size:21px;font-stretch:110%}
 .card .num{font-family:var(--f-disp);font-stretch:118%;font-weight:700;font-size:40px;line-height:1.05;color:var(--brand);font-variant-numeric:tabular-nums}
-.card .num u{text-decoration:none;font:500 13px var(--f-mono);color:var(--ink-3);margin-left:8px;letter-spacing:0}
+.card .num .unit{font:500 13px var(--f-mono);color:var(--ink-3);margin-left:8px;letter-spacing:0}
 .card p:not(.pn):not(.num){color:var(--ink-2);font-size:15px}
 .card .more{margin-top:auto;padding-top:6px;font-size:14px;font-weight:500}
 @media (max-width:900px){ .cards{grid-template-columns:1fr} }
@@ -211,8 +211,8 @@ html[lang="en"] .dims div{grid-template-columns:7.5em 1fr}
 .stats dt{font-size:14px;color:var(--ink-3)}
 .stats dd{margin:6px 0 4px;font-family:var(--f-disp);font-stretch:118%;font-weight:700;font-size:clamp(32px,3.6vw,44px);
   line-height:1.05;font-variant-numeric:tabular-nums}
-.stats dd s{text-decoration:none;color:var(--ink-3);margin-right:3px;font-weight:500}
-.stats dd u{text-decoration:none;font:500 14px var(--f-mono);color:var(--ink-3);margin-left:6px}
+.stats dd .approx{color:var(--ink-3);margin-right:3px;font-weight:500}
+.stats dd .unit{font:500 14px var(--f-mono);color:var(--ink-3);margin-left:6px}
 .stats p{font-size:14px;color:var(--ink-2)}
 @media (max-width:760px){
   .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -250,7 +250,7 @@ html[lang="en"] .dims div{grid-template-columns:7.5em 1fr}
   .pin{min-width:30px;height:30px;border-radius:15px;font-size:12.5px;line-height:27px}
 }
 @media (max-width:350px){ .brand span{display:none} }
-@media (max-width:360px){ .stats dd{font-size:26px} .stats dd u{font-size:12px;margin-left:4px} }
+@media (max-width:360px){ .stats dd{font-size:26px} .stats dd .unit{font-size:12px;margin-left:4px} }
 
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
